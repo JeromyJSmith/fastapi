@@ -124,8 +124,7 @@ openapi_schema = {
 def get_client():
     from docs_src.request_files.tutorial001_an_py39 import app
 
-    client = TestClient(app)
-    return client
+    return TestClient(app)
 
 
 @needs_py39

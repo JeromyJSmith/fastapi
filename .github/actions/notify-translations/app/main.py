@@ -265,8 +265,9 @@ def get_graphql_translation_discussion_comments(
     )
 
     while discussion_edges:
-        for discussion_edge in discussion_edges:
-            comment_nodes.append(discussion_edge.node)
+        comment_nodes.extend(
+            discussion_edge.node for discussion_edge in discussion_edges
+        )
         last_edge = discussion_edges[-1]
         discussion_edges = get_graphql_translation_discussion_comments_edges(
             settings=settings,
@@ -326,10 +327,11 @@ if __name__ == "__main__":
     logging.debug(f"Processing PR: #{github_event.pull_request.number}")
     pr = repo.get_pull(github_event.pull_request.number)
     label_strs = {label.name for label in pr.get_labels()}
-    langs = []
-    for label in label_strs:
-        if label.startswith("lang-") and not label == lang_all_label:
-            langs.append(label[5:])
+    langs = [
+        label[5:]
+        for label in label_strs
+        if label.startswith("lang-") and label != lang_all_label
+    ]
     logging.info(f"PR #{pr.number} has labels: {label_strs}")
     if not langs or lang_all_label not in label_strs:
         logging.info(f"PR #{pr.number} doesn't seem to be a translation PR, skipping")
@@ -341,7 +343,7 @@ if __name__ == "__main__":
     for discussion in discussions:
         for edge in discussion.labels.edges:
             label = edge.node.name
-            if label.startswith("lang-") and not label == lang_all_label:
+            if label.startswith("lang-") and label != lang_all_label:
                 lang = label[5:]
                 lang_to_discussion_map[lang] = discussion
     logging.debug(f"Using translations map: {lang_to_discussion_map}")
