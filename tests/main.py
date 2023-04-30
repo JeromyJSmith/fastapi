@@ -145,9 +145,7 @@ def get_query(query):
 
 @app.get("/query/optional")
 def get_query_optional(query=None):
-    if query is None:
-        return "foo bar"
-    return f"foo bar {query}"
+    return "foo bar" if query is None else f"foo bar {query}"
 
 
 @app.get("/query/int")
@@ -157,9 +155,7 @@ def get_query_type(query: int):
 
 @app.get("/query/int/optional")
 def get_query_type_optional(query: Optional[int] = None):
-    if query is None:
-        return "foo bar"
-    return f"foo bar {query}"
+    return "foo bar" if query is None else f"foo bar {query}"
 
 
 @app.get("/query/int/default")
@@ -169,9 +165,7 @@ def get_query_type_int_default(query: int = 10):
 
 @app.get("/query/param")
 def get_query_param(query=Query(default=None)):
-    if query is None:
-        return "foo bar"
-    return f"foo bar {query}"
+    return "foo bar" if query is None else f"foo bar {query}"
 
 
 @app.get("/query/param-required")
